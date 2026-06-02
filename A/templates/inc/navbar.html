@@ -1,0 +1,188 @@
+{% load static %}
+<nav class="navbar">
+    <div class="container navbar-container">
+        <!-- Logo -->
+        <a href="{% url 'home:home' %}" class="logo">
+            <i class="fas fa-comments"></i>
+            <span>شبکه اجتماعی</span>
+        </a>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="جستجو در شبکه اجتماعی..." id="searchInput">
+        </div>
+
+        <!-- Main Navigation Links -->
+        <div class="nav-links">
+            <a href="{% url 'home:home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                <i class="fas fa-home"></i>
+                <span>خانه</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="fas fa-compass"></i>
+                <span>کاوش</span>
+            </a>
+
+            {% if user.is_authenticated %}
+                <a href="#" class="nav-link notification-link">
+                    <i class="fas fa-bell"></i>
+                    <span>اعلان‌ها</span>
+                    {% if unread_notifications > 0 %}
+                        <span class="notification-badge">{{ unread_notifications }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="user-menu">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-avatar">
+                        {% else %}
+                            <div class="user-avatar-placeholder">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="{% url 'account:user_profile' request.user.id %}" class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>پروفایل من</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>تنظیمات</span>
+                        </a>
+                        <a href="{% url 'account:user_profile' user.id %}" class="dropdown-item">
+                            <i class="fas fa-pen"></i>
+                            <span>نوشته‌های من</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form method="get" action="{% url 'account:user_logout' %}">
+                            <button type="submit" class="dropdown-item logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>خروج</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="auth-buttons">
+                    <a href="{% url 'account:user_login' %}" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>ورود</span>
+                    </a>
+                    <a href="{% url 'account:user_register' %}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        <span>ثبت‌نام</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <h3>منو</h3>
+        <button class="close-mobile-menu">&times;</button>
+    </div>
+    <div class="mobile-menu-links">
+        <a href="#" class="mobile-nav-link">
+            <i class="fas fa-home"></i>
+            <span>خانه</span>
+        </a>
+        <a href="#" class="mobile-nav-link">
+            <i class="fas fa-compass"></i>
+            <span>کاوش</span>
+        </a>
+        {% if user.is_authenticated %}
+            <a href="#" class="mobile-nav-link">
+                <i class="fas fa-user"></i>
+                <span>پروفایل</span>
+            </a>
+            <a href="#" class="mobile-nav-link">
+                <i class="fas fa-cog"></i>
+                <span>تنظیمات</span>
+            </a>
+            <div class="mobile-divider"></div>
+            <form method="post" action="#">
+                {% csrf_token %}
+                <button type="submit" class="mobile-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>خروج</span>
+                </button>
+            </form>
+        {% else %}
+            <a href="#" class="mobile-nav-link">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>ورود</span>
+            </a>
+            <a href="#" class="mobile-nav-link btn-primary-mobile">
+                <i class="fas fa-user-plus"></i>
+                <span>ثبت‌نام</span>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // User menu dropdown
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuBtn) {
+        userMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            userDropdown.classList.remove('show');
+        });
+
+        userDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.querySelector('.close-mobile-menu');
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenu.classList.add('active');
+        });
+
+        closeMobileMenu.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-nav-link, .mobile-logout-btn').forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+        });
+    }
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                window.location.href = `/search/?q=${encodeURIComponent(this.value)}`;
+            }
+        });
+    }
+</script>

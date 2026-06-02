@@ -1,0 +1,141 @@
+/* ========== EDIT POST FORM STYLES ========== */
+
+/* کانتینر فرم */
+.main-content .container form {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    padding: 2rem;
+}
+
+/* استایل فیلدهای فرم */
+.main-content .container form input,
+.main-content .container form textarea,
+.main-content .container form select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+/* فوکوس فیلدها */
+.main-content .container form input:focus,
+.main-content .container form textarea:focus,
+.main-content .container form select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+}
+
+/* استایل لیبل‌ها (اگر جنگو تولید کنه) */
+.main-content .container form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 0.875rem;
+}
+
+/* استایل دکمه سابمیت */
+.main-content .container .btn-primary,
+.main-content .container form input[type="submit"] {
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+/* هاور دکمه */
+.main-content .container .btn-primary:hover,
+.main-content .container form input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    filter: brightness(1.05);
+}
+
+/* استایل برای خطاهای فرم (اگر باشد) */
+.main-content .container form .errorlist {
+    list-style: none;
+    margin: -1rem 0 1rem 0;
+    padding: 0;
+}
+
+.main-content .container form .errorlist li {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+/* استایل برای هلپ تکس‌ها */
+.main-content .container form .helptext {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content .container form {
+        margin: 1rem;
+        padding: 1.25rem;
+    }
+
+    .main-content .container form input,
+    .main-content .container form textarea {
+        padding: 0.625rem;
+        font-size: 0.875rem;
+    }
+
+    .main-content .container .btn-primary,
+    .main-content .container form input[type="submit"] {
+        padding: 0.625rem 1.5rem;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    .main-content .container form {
+        background: #0f172a;
+    }
+
+    .main-content .container form label {
+        color: #f8fafc;
+    }
+
+    .main-content .container form input,
+    .main-content .container form textarea {
+        background: #1e293b;
+        border-color: #334155;
+        color: #f8fafc;
+    }
+
+    .main-content .container form input:focus,
+    .main-content .container form textarea:focus {
+        background: #0f172a;
+        border-color: #6366f1;
+    }
+
+    .main-content .container form .helptext {
+        color: #94a3b8;
+    }
+}

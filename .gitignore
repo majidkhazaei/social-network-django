@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+env/
+venv/
+.venv/
+
+# Django
+db.sqlite3
+media/
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Migrations (اختیاری)
+# */migrations/*
+# !*/migrations/__init__.py
+
+# Static files collected by collectstatic
+staticfiles/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/

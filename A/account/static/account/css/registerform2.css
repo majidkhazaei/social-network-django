@@ -1,0 +1,218 @@
+/* ========== REGISTER PAGE STYLES ========== */
+/* این استایل بدون نیاز به تغییر در HTML کار میکنه */
+
+/* Main Container - استایل اصلی فرم */
+form {
+    max-width: 500px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2xl);
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Header اضافی با سودو المنت */
+form::before {
+    content: "✨ ورود به حساب کاربری";
+    display: block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* فرم بدنه */
+form {
+    padding: 2rem;
+}
+
+/* استایل همه فیلدهای فرم */
+form input:not([type="submit"]),
+form select,
+form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid var(--gray-light);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    font-family: inherit;
+    background: white;
+}
+
+/* لیبل‌ها */
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.875rem;
+}
+
+/* هاور و فوکوس فیلدها */
+form input:not([type="submit"]):focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* استایل دکمه submit */
+input[type="submit"] {
+    width: 100%;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    filter: brightness(1.05);
+}
+
+input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* استایل خطاهای جنگو */
+.errorlist {
+    list-style: none;
+    margin: -0.5rem 0 1rem 0;
+    padding: 0;
+}
+
+.errorlist li {
+    color: var(--danger);
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.errorlist li::before {
+    content: "⚠️";
+    font-size: 0.7rem;
+}
+
+/* استایل هلپ ت�סט جنگو */
+.helptext {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin: -0.5rem 0 1rem 0;
+}
+
+/* استایل برای گروه‌های فیلد (اگر جنگو خودش div بذاره) */
+form > div {
+    margin-bottom: 1rem;
+}
+
+/* ریسپانسیو */
+@media (max-width: 768px) {
+    form {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    form::before {
+        font-size: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    form {
+        padding: 1.5rem;
+    }
+}
+
+/* انیمیشن */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* استایل چک‌باکس‌ها */
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto !important;
+    margin-left: 0.5rem;
+    accent-color: var(--primary);
+}
+
+/* استایل برای پاراگراف‌های داخل فرم (مثل متن ثبت‌نام) */
+form p {
+    margin-bottom: 1rem;
+}
+
+/* خط جداکننده قبل از دکمه */
+input[type="submit"] {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+input[type="submit"]::before {
+    display: none;
+}
+
+/* استایل برای زمانی که دکمه غیرفعاله */
+input[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* دارک مود */
+@media (prefers-color-scheme: dark) {
+    form {
+        background: var(--dark);
+    }
+
+    form label {
+        color: var(--light);
+    }
+
+    form input:not([type="submit"]),
+    form select,
+    form textarea {
+        background: var(--gray-dark);
+        border-color: var(--gray);
+        color: var(--light);
+    }
+
+    form input:not([type="submit"]):focus {
+        border-color: var(--primary);
+    }
+
+    .helptext {
+        color: var(--gray-light);
+    }
+}
+
+/* اسکرول نرم */
+html {
+    scroll-behavior: smooth;
+}

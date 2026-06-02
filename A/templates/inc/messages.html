@@ -1,0 +1,66 @@
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="message message-{{ message.tags }}" role="alert">
+        <div class="message-icon">
+            {% if message.tags == 'success' %}
+                <i class="fas fa-check-circle"></i>
+            {% elif message.tags == 'error' %}
+                <i class="fas fa-exclamation-circle"></i>
+            {% elif message.tags == 'warning' %}
+                <i class="fas fa-exclamation-triangle"></i>
+            {% elif message.tags == 'info' %}
+                <i class="fas fa-info-circle"></i>
+            {% else %}
+                <i class="fas fa-bell"></i>
+            {% endif %}
+        </div>
+        <div class="message-content">
+            {{ message }}
+        </div>
+        <button class="message-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Toast Container for dynamic messages -->
+<div id="toast-container" class="toast-container"></div>
+
+<script>
+// Function to show custom toast messages
+function showToast(message, type = 'info', duration = 5000) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    let icon = '';
+    switch(type) {
+        case 'success': icon = 'fa-check-circle'; break;
+        case 'error': icon = 'fa-exclamation-circle'; break;
+        case 'warning': icon = 'fa-exclamation-triangle'; break;
+        default: icon = 'fa-info-circle';
+    }
+
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fas ${icon}"></i>
+        </div>
+        <div class="toast-content">${message}</div>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="toast-progress"></div>
+    `;
+
+    container.appendChild(toast);
+
+    // Auto remove after duration
+    setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-out forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+</script>

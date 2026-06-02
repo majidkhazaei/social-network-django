@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'account/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% if request.user.id == user.id %}
+        <a href="{% url 'home:post_create'  %}" class="btn-outline">ایجاد پست جدید</a>
+    {% endif %}
+
+    {% if request.user.id != user.id and not is_following %}
+        <a href="{% url 'account:user_follow' user.id %}" class="btn-outline">فالو</a>
+    {% elif request.user.id != user.id and is_following %}
+        <a href="{% url 'account:user_unfollow' user.id %}" class="btn-outline">آنفالو</a>
+    {% endif %}
+
+    <h2>{{ user.username }} </h2>
+
+    <p>
+     {% for post in posts %}
+        <a href="{% url 'home:post_detail' post.id post.slug %}">{{ post.body|truncatewords:8 }}</a>
+     {% endfor %}
+    </p>
+
+{% endblock %}
