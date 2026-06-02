@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'home/css/feed2.css' %}" xmlns="http://www.w3.org/1999/html">
+<link rel="stylesheet" href="{% static 'home/css/feed2.css' %}" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 {% block content %}
 
@@ -27,11 +28,100 @@
     {% for comment in comments %}
         <div class="card bg-dark text-white">
             <a href="{% url 'account:user_profile' comment.user.id %}" class="card-header">{{ comment.user }} </a>
-            </br>
+            <br/>
             <p> {{comment.created|timesince}}</p>
             <p class="card-body">{{comment.body}}</p>
+
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'home:add_reply' post.id comment.id %}" method="post">
+                    {% csrf_token %}
+                    {{ reply_form }}
+                    <input type="submit" value="ارسال">
+                </form>
+            {% endif %}
+
+            {% with replies=comment.rcomments.all %}
+                {% for reply in replies %}
+                    <a href="{% url 'account:user_profile' reply.user.id %}">{{ reply.user }}<br/> </a> <p>{{ reply.body }}</p>
+                {% endfor %}
+            {% endwith %}
+
         </div>
     {% empty %}
         <p>no comments yet</p>
     {% endfor %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. فرم اصلی نظر جدید
+        var mainForm = document.querySelector('.main-content .container > form:first-of-type');
+        if (mainForm && !mainForm.closest('.main-comment-wrapper')) {
+            var wrapper = document.createElement('div');
+            wrapper.className = 'main-comment-wrapper';
+            mainForm.parentNode.insertBefore(wrapper, mainForm);
+            wrapper.appendChild(mainForm);
+            wrapper.style.display = 'none';
+
+            var btn = document.createElement('button');
+            btn.className = 'collapse-btn';
+            btn.textContent = '➕ نظر جدید';
+            var thirdP = document.querySelector('.main-content .container p:nth-of-type(3)');
+            if (thirdP) thirdP.insertAdjacentElement('afterend', btn);
+
+            btn.addEventListener('click', function() {
+                if (wrapper.style.display === 'none') {
+                    wrapper.style.display = 'block';
+                    btn.textContent = '✖ بستن';
+                } else {
+                    wrapper.style.display = 'none';
+                    btn.textContent = '➕ نظر جدید';
+                }
+            });
+        }
+
+        // 2. فرم‌های پاسخ داخل هر کامنت
+        var cards = document.querySelectorAll('.card');
+        cards.forEach(function(card) {
+            var replyForm = card.querySelector('form');  // فرم داخل کارت
+            if (!replyForm) return;
+
+            // تغییر دکمه submit
+            var submitBtn = replyForm.querySelector('input[type="submit"]');
+            if (submitBtn) submitBtn.value = 'پاسخ';
+
+            // اگر قبلاً در reply-form نپیچیده شده، بپیچ
+            if (!replyForm.closest('.reply-form')) {
+                var wrap = document.createElement('div');
+                wrap.className = 'reply-form';
+                replyForm.parentNode.insertBefore(wrap, replyForm);
+                wrap.appendChild(replyForm);
+            }
+            var replyWrapper = replyForm.closest('.reply-form');
+            replyWrapper.style.display = 'none';
+
+            // دکمه پاسخ
+            var replyBtn = card.querySelector('.reply-toggle-btn');
+            if (!replyBtn) {
+                replyBtn = document.createElement('button');
+                replyBtn.className = 'reply-toggle-btn';
+                replyBtn.textContent = '💬 پاسخ';
+                var cardBody = card.querySelector('.card-body');
+                if (cardBody) cardBody.insertAdjacentElement('afterend', replyBtn);
+                else card.appendChild(replyBtn);
+
+                replyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (replyWrapper.style.display === 'none') {
+                        replyWrapper.style.display = 'block';
+                        replyBtn.textContent = '❌ بستن';
+                    } else {
+                        replyWrapper.style.display = 'none';
+                        replyBtn.textContent = '💬 پاسخ';
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 {% endblock %}
