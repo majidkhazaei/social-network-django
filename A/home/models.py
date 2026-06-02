@@ -29,6 +29,14 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Post"
 
+    def like_count(self):
+        return self.plikes.count()
+
+    def user_likes(self, user):
+        user_likes = user.ulikes.filter(post=self)
+        if user_likes.exists():
+            return True
+        return False
 
 
 class Comment(models.Model):
@@ -41,3 +49,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Comment : {self.body[:20]}"
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ulikes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='plikes')
+
+    def __str__(self):
+        return f"{self.user.username} Liked : {self.post.body[:20]}"

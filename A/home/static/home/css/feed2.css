@@ -210,3 +210,70 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* ========== استایل دکمه لایک ========== */
+.btn-primary.col-md-2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    color: white;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* آیکون قلب قبل از متن */
+.btn-primary.col-md-2::before {
+    content: "❤️";
+    font-size: 0.85rem;
+    transition: transform 0.2s;
+}
+
+/* هاور دکمه */
+.btn-primary.col-md-2:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    filter: brightness(1.05);
+}
+
+/* حالت غیرفعال (اگر کاربر خودش پست را لایک کرده باشد) */
+.btn-primary.col-md-2.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: linear-gradient(135deg, #9ca3af, #6b7280);
+    filter: none;
+}
+
+/* حالت غیرفعال برای آیکون */
+.btn-primary.col-md-2.disabled::before {
+    content: "💔";
+}
+
+/* ریسپانسیو برای موبایل */
+@media (max-width: 768px) {
+    .btn-primary.col-md-2 {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    .btn-primary.col-md-2::before {
+        font-size: 0.75rem;
+    }
+}
+
+/* دارک مود */
+@media (prefers-color-scheme: dark) {
+    .btn-primary.col-md-2 {
+        background: linear-gradient(135deg, #dc2626, #ea580c);
+    }
+    .btn-primary.col-md-2:hover {
+        filter: brightness(1.1);
+    }
+}

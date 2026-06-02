@@ -16,6 +16,9 @@
     <p>{{ post.body }}</p>
 
     {% if request.user.is_authenticated %}
+        <a href="{% url 'home:post_like' post.id %}"
+           class="btn-primary col-md-2 {% if can_like %}disabled{% endif %}">لایک  {{ post.like_count }}</a>
+        <br/>
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
