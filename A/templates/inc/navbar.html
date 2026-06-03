@@ -7,12 +7,6 @@
             <span>شبکه اجتماعی</span>
         </a>
 
-        <!-- Search Box -->
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="جستجو در شبکه اجتماعی..." id="searchInput">
-        </div>
-
         <!-- Main Navigation Links -->
         <div class="nav-links">
             <a href="{% url 'home:home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
@@ -37,7 +31,7 @@
                 <div class="user-menu">
                     <button class="user-menu-btn" id="userMenuBtn">
                         {% if user.profile.avatar %}
-                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-avatar">
+                            <img src="" alt="{{ user.username }}" class="user-avatar">
                         {% else %}
                             <div class="user-avatar-placeholder">
                                 {{ user.username|first|upper }}

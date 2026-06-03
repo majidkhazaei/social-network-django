@@ -1,65 +1,79 @@
-/* ========== HOME PAGE STYLES (Posts Feed) ========== */
-/* این استایل فقط روی صفحه خانه تاثیر میذاره و با base.html تداخل نداره */
+/* ========== SEARCH & HOME PAGE STYLES ========== */
 
-/* فقط روی کانتینری که داخل این صفحه است تاثیر میذاره */
-.main-content .container,
-body > .wrapper > .main-content > .container {
+/* کانتینر اصلی */
+.main-content .container {
     max-width: 800px;
     margin: 2rem auto;
     animation: fadeInUp 0.5s ease-out;
 }
 
-/* استایل h3 - فقط مخصوص این صفحه */
-.main-content h3,
-body .main-content h3 {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #64748b;
-    padding: 2rem;
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+/* ========== فرم جستجو ========== */
+.main-content form {
+    display: flex;
+    gap: 0.5rem;
     margin-bottom: 2rem;
-    margin-top: 0;
-    position: relative;
-    overflow: hidden;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 3rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
-/* افکت دکوراتیو برای h3 */
-.main-content h3::before {
-    content: '⚙️';
-    margin-right: 0.5rem;
-    font-size: 1.5rem;
-    display: inline-block;
-    animation: spin 3s linear infinite;
+/* فیلد ورودی جستجو */
+.main-content form input:not([type="submit"]) {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    font-family: inherit;
 }
 
-.main-content h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #6366f1, #ec4899, transparent);
+.main-content form input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
 }
 
-/* استایل لینک‌ها (هر پست) - فقط مخصوص این صفحه */
+/* دکمه جستجو */
+.main-content form input[type="submit"] {
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.main-content form input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    filter: brightness(1.05);
+}
+
+/* ========== لیست پست‌ها ========== */
+/* هر پست به صورت کارت */
 .main-content a {
     display: block;
     text-decoration: none;
     background: white;
     margin-bottom: 1rem;
     padding: 1.25rem 1.5rem;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: #0f172a;
     border-right: 3px solid transparent;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #334155;
 }
 
-/* هاور لینک‌ها */
 .main-content a:hover {
     transform: translateX(5px);
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
@@ -67,21 +81,14 @@ body .main-content h3 {
     background: linear-gradient(90deg, white, rgba(99, 102, 241, 0.05));
 }
 
-/* استایل متن داخل لینک */
-.main-content a {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #334155;
-}
-
-/* اضافه کردن آیکون قبل از هر پست */
+/* آیکون قبل از هر پست */
 .main-content a::before {
-    content: '📝';
+    content: "📄";
     margin-left: 0.75rem;
     font-size: 1rem;
     opacity: 0.7;
-    transition: all 0.3s ease;
     display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .main-content a:hover::before {
@@ -89,12 +96,12 @@ body .main-content h3 {
     transform: scale(1.1);
 }
 
-/* خط جداکننده بین پست‌ها */
+/* جداکننده بین پست‌ها (اختیاری) */
 .main-content a:not(:last-child) {
     border-bottom: 1px solid #e2e8f0;
 }
 
-/* استایل برای زمانی که هیچ پستی وجود نداره */
+/* پیام «نتیجه‌ای یافت نشد» */
 .main-content .container:has(a:only-child) a:first-child {
     text-align: center;
     color: #64748b;
@@ -102,10 +109,10 @@ body .main-content h3 {
 }
 
 .main-content .container:has(a:only-child) a:first-child::before {
-    content: '📭';
+    content: "🔍";
 }
 
-/* انیمیشن برای پست‌ها */
+/* انیمیشن برای پست‌ها (ورود تدریجی) */
 .main-content a {
     animation: slideInRight 0.4s ease-out forwards;
     opacity: 0;
@@ -123,15 +130,26 @@ body .main-content h3 {
 .main-content a:nth-child(9) { animation-delay: 0.45s; }
 .main-content a:nth-child(10) { animation-delay: 0.5s; }
 
-/* Responsive */
+/* ========== ریسپانسیو ========== */
 @media (max-width: 768px) {
     .main-content .container {
         margin: 1rem;
     }
 
-    .main-content h3 {
-        font-size: 1.25rem;
-        padding: 1.25rem;
+    .main-content form {
+        flex-direction: column;
+        border-radius: 1rem;
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .main-content form input:not([type="submit"]) {
+        border-radius: 1rem;
+    }
+
+    .main-content form input[type="submit"] {
+        padding: 0.6rem;
+        width: 100%;
     }
 
     .main-content a {
@@ -144,11 +162,21 @@ body .main-content h3 {
     }
 }
 
-/* Dark Mode */
+/* ========== دارک مود ========== */
 @media (prefers-color-scheme: dark) {
-    .main-content h3 {
+    .main-content form {
         background: #0f172a;
-        color: #e2e8f0;
+    }
+
+    .main-content form input:not([type="submit"]) {
+        background: #1e293b;
+        border-color: #334155;
+        color: #f8fafc;
+    }
+
+    .main-content form input:focus {
+        background: #0f172a;
+        border-color: #6366f1;
     }
 
     .main-content a {
@@ -164,10 +192,11 @@ body .main-content h3 {
 
     .main-content .container:has(a:only-child) a:first-child {
         background: #1e293b;
+        color: #94a3b8;
     }
 }
 
-/* Animations */
+/* ========== انیمیشن‌ها ========== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -190,16 +219,7 @@ body .main-content h3 {
     }
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* اسکرول بار فقط برای این صفحه */
+/* اسکرول بار برای محتوای طولانی (اختیاری) */
 .main-content .container {
     max-height: calc(100vh - 200px);
     overflow-y: auto;

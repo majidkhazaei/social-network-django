@@ -4,7 +4,11 @@
 <link rel="stylesheet" href="{% static 'home/css/feed.css' %}">
 {% endblock %}
 {% block content %}
-    <h3>در حال ساخت...</h3>
+    <form action="" method="get">
+        {{ form }}
+        <input type="submit" value="جستجو">
+    </form><br>
+
     {% for post in posts %}
         <a href="{% url 'home:post_detail' post.id post.slug %}">{{ post.body|truncatewords:8 }}</a>
     {% endfor %}
