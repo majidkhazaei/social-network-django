@@ -14,19 +14,9 @@
                 <span>خانه</span>
             </a>
 
-            <a href="#" class="nav-link">
-                <i class="fas fa-compass"></i>
-                <span>کاوش</span>
-            </a>
 
             {% if user.is_authenticated %}
-                <a href="#" class="nav-link notification-link">
-                    <i class="fas fa-bell"></i>
-                    <span>اعلان‌ها</span>
-                    {% if unread_notifications > 0 %}
-                        <span class="notification-badge">{{ unread_notifications }}</span>
-                    {% endif %}
-                </a>
+            
 
                 <div class="user-menu">
                     <button class="user-menu-btn" id="userMenuBtn">
@@ -45,7 +35,7 @@
                             <i class="fas fa-user"></i>
                             <span>پروفایل من</span>
                         </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'account:edit_user'  %}" class="dropdown-item">
                             <i class="fas fa-cog"></i>
                             <span>تنظیمات</span>
                         </a>

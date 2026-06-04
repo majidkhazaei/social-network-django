@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'account/css/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="ثبت تغییرات">
+    </form>
+{% endblock %}

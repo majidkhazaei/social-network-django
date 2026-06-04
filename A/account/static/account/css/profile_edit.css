@@ -1,0 +1,164 @@
+/* ========== PROFILE EDIT / UPDATE PAGE STYLES ========== */
+
+/* کانتینر اصلی */
+.main-content .container {
+    max-width: 700px;
+    margin: 2rem auto;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* کارت سفید حاوی فرم */
+.main-content .container {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+
+/* استایل فرم */
+.main-content form {
+    margin: 0;
+}
+
+/* استایل گروه‌های فیلد (جنگو معمولاً فیلدها را در <p> یا <div> قرار می‌دهد) */
+.main-content form p,
+.main-content form div {
+    margin-bottom: 1.5rem;
+}
+
+/* لیبل‌ها */
+.main-content form label {
+    display: block;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* فیلدهای ورودی، ایمیل، شماره و ... */
+.main-content form input:not([type="submit"]),
+.main-content form select,
+.main-content form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+/* فوکوس فیلدها */
+.main-content form input:focus,
+.main-content form select:focus,
+.main-content form textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    background: white;
+}
+
+/* استایل دکمه تغییرات */
+.main-content form input[type="submit"],
+.main-content .container > input[type="submit"] {
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+    display: inline-block;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.main-content form input[type="submit"]:hover,
+.main-content .container > input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    filter: brightness(1.05);
+}
+
+/* پیام‌های خطا (اگر فرم خطا داشته باشد) */
+.main-content form .errorlist {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    color: #ef4444;
+    font-size: 0.75rem;
+}
+
+/* هلپ تکس (راهنما) */
+.main-content form .helptext {
+    display: block;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+/* ریسپانسیو */
+@media (max-width: 768px) {
+    .main-content .container {
+        margin: 1rem;
+        padding: 1.25rem;
+    }
+
+    .main-content form input:not([type="submit"]),
+    .main-content form select,
+    .main-content form textarea {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.875rem;
+    }
+
+    .main-content form input[type="submit"],
+    .main-content .container > input[type="submit"] {
+        width: 100%;
+        text-align: center;
+        padding: 0.7rem;
+    }
+}
+
+/* دارک مود */
+@media (prefers-color-scheme: dark) {
+    .main-content .container {
+        background: #0f172a;
+    }
+
+    .main-content form label {
+        color: #f8fafc;
+    }
+
+    .main-content form input:not([type="submit"]),
+    .main-content form select,
+    .main-content form textarea {
+        background: #1e293b;
+        border-color: #334155;
+        color: #f8fafc;
+    }
+
+    .main-content form input:focus {
+        background: #0f172a;
+        border-color: #6366f1;
+    }
+
+    .main-content form .helptext {
+        color: #94a3b8;
+    }
+}
+
+/* انیمیشن */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
