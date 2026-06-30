@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from home.models import Post
 from .models import Relation
 
+
 class UserRegisterView(View):
     form_class = UserRegisterForm
     template_name = 'account/user_register.html'
@@ -125,3 +126,20 @@ class EditUserView(LoginRequiredMixin,View):
 
 
 
+#API VIEWS
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import UserRegisterSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+
+
+class UserRegisterAPI(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        ser_data = UserRegisterSerializer(data=request.data)
+        if ser_data.is_valid():
+            ser_data.create(ser_data.validated_data)
+            return Response(ser_data.data, status=status.HTTP_201_CREATED)
+        return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
