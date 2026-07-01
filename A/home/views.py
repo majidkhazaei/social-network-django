@@ -136,3 +136,22 @@ class PostLikeView(LoginRequiredMixin,View):
         return redirect('home:post_detail', post.id, post.slug)
 
 
+# API VIEWS
+
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .serializers import PostSerializer
+from rest_framework.pagination import PageNumberPagination
+
+
+class PostListCreateAPIView(ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 10
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
