@@ -1,4 +1,4 @@
-from .models import Post
+from .models import Post, Comment
 from rest_framework import serializers
 
 class PostSerializer(serializers.ModelSerializer):
@@ -18,3 +18,15 @@ class PostSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.user_likes(request.user)
         return False
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'user', 'body', 'created','is_reply', 'reply')
+        read_only_fields = ('user', 'post',' created', 'is_reply', 'reply')
+
+    def get_replies(self, obj):
+        if not obj.is_reply:
+            return CommentSerializer(obj.rcomments.all(), many=True, context=self.context).data
+        return []

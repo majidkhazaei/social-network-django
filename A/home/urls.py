@@ -12,4 +12,7 @@ urlpatterns = [
     path('like/<int:post_id>/', views.PostLikeView.as_view(), name='post_like'),
     #API URLS
     path('api/posts/', views.PostListCreateAPIView.as_view()),
+    path('api/posts/<slug:slug>/', views.PostRetrieveUpdateDestroyAPIView.as_view(), name='api_post_detail'),
+    path('api/posts/<slug:slug>/comments/', views.CommentListCreateAPIView.as_view(), name='api_post_comments'),
+    path('api/posts/<slug:slug>/like/', views.LikeToggleAPIView.as_view(), name='api_post_like'),
 ]

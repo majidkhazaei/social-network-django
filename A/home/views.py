@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .models import Post, Comment, Like
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -137,11 +137,16 @@ class PostLikeView(LoginRequiredMixin,View):
 
 
 # API VIEWS
-
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .serializers import PostSerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from .permissions import IsAuthorOrReadOnly
+from rest_framework.generics import ListCreateAPIView
+from .serializers import CommentSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class PostListCreateAPIView(ListCreateAPIView):
@@ -155,3 +160,50 @@ class PostListCreateAPIView(ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    lookup_field = 'slug'
+
+
+class CommentListCreateAPIView(ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        post_slug = self.kwargs['slug']
+        post = Post.objects.get(slug=post_slug)
+        return Comment.objects.filter(post=post, is_reply=False)
+
+    def perform_create(self, serializer):
+        post_slug = self.kwargs['slug']
+        post = Post.objects.get(slug=post_slug)
+        reply_id = self.request.data.get('reply')
+
+        reply_obj = None
+        if reply_id:
+            reply_obj = Comment.objects.get(id=reply_id)
+
+        serializer.save(
+            user=self.request.user,
+            post=post,
+            reply=reply_obj,
+            is_reply=bool(reply_obj)
+        )
+
+
+class LikeToggleAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, **kwargs):
+        post_slug = self.kwargs['slug']
+        post = Post.objects.get(slug=post_slug)
+        like = Like.objects.filter(post=post, user=request.user)
+        if like.exists():
+            like.delete()
+            return Response({"message": "unliked"}, status=status.HTTP_200_OK)
+        else:
+            Like.objects.create(user=request.user, post=post)
+            return Response({"message": "liked"}, status=status.HTTP_201_CREATED)
