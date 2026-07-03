@@ -12,4 +12,7 @@ urlpatterns = [
     path('edit_user', views.EditUserView.as_view(), name='edit_user'),
     #API URLS
     path('api/register/', views.UserRegisterAPI.as_view()),
+    path('api/follow/<int:user_id>/', views.FollowToggleAPI.as_view()),
+    path('api/profile/', views.ProfileRetrieveUpdateAPIView.as_view()),
+    path('api/users/', views.UserListAPIView.as_view()),
 ]

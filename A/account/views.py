@@ -1,5 +1,4 @@
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UserRegisterForm, UserLoginForm, EditUserForm
 from django.contrib import messages
@@ -7,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from home.models import Post
-from .models import Relation
+from .models import Relation, Profile
 
 
 class UserRegisterView(View):
@@ -129,9 +128,10 @@ class EditUserView(LoginRequiredMixin,View):
 #API VIEWS
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserRegisterSerializer
-from rest_framework.permissions import AllowAny
+from .serializers import UserRegisterSerializer, ProfileSerializer, UserSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 
 
 class UserRegisterAPI(APIView):
@@ -143,3 +143,34 @@ class UserRegisterAPI(APIView):
             ser_data.create(ser_data.validated_data)
             return Response(ser_data.data, status=status.HTTP_201_CREATED)
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FollowToggleAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        if request.user.id == user_id:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        rel = Relation.objects.filter(from_user=request.user, to_user=user)
+        if rel:
+            rel.delete()
+            return Response({"message": "unfollowed"}, status=status.HTTP_200_OK)
+        else:
+            Relation.objects.create(from_user=request.user, to_user=user)
+            return Response({"message": "followed"}, status=status.HTTP_200_OK)
+
+
+class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
+class UserListAPIView(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]

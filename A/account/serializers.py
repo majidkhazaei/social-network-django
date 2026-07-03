@@ -1,12 +1,24 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import Relation, Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
+    following_count = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ('__all__',)
-        read_only_fields = ('__all__',)
+        fields = ('username', 'email', 'following_count', 'followers_count')
+
+
+    def get_following_count(self, obj):
+        following = obj.following.count()
+        return following
+
+    def get_followers_count(self, obj):
+        followers = obj.followers.count()
+        return followers
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -30,3 +42,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if data['password'] != data['password2']:
             raise serializers.ValidationError('passwords must match')
         return data
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('user', 'age', 'address')
+        read_only_fields = ('user',)
