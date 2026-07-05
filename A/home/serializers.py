@@ -30,3 +30,8 @@ class CommentSerializer(serializers.ModelSerializer):
         if not obj.is_reply:
             return CommentSerializer(obj.rcomments.all(), many=True, context=self.context).data
         return []
+
+    def validate_body(self, body):
+        if not body or body.strip() == '':
+            raise serializers.ValidationError('Body cannot be an empty string')
+        return body

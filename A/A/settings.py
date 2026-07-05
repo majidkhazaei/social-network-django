@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'account.apps.AccountConfig',
     'rest_framework',
+    'django_filters',
     'rest_framework_simplejwt'
 ]
 

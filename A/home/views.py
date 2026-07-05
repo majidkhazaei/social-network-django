@@ -7,6 +7,7 @@ from .forms import PostCreateUpdateForm, CommentCreateForm, CommentReplyForm, Po
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 class HomeView(View):
     form_class = PostSearchForm
@@ -147,14 +148,28 @@ from .serializers import CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class PostListCreateAPIView(ListCreateAPIView):
-    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PageNumberPagination
     pagination_class.page_size = 10
+    filterset_fields = ['user']
+    search_fields = ['body']
+    ordering_fields = ['-created']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+
+    def get_queryset(self):
+        if self.request.query_params.get('user_id'):
+            user_id =self.request.query_params.get('user_id')
+            that_user= get_object_or_404(User, id=user_id)
+            posts = Post.objects.filter(user=that_user)
+            return posts
+        else:
+            return Post.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -203,7 +218,8 @@ class LikeToggleAPIView(APIView):
         like = Like.objects.filter(post=post, user=request.user)
         if like.exists():
             like.delete()
-            return Response({"message": "unliked"}, status=status.HTTP_200_OK)
+            return Response({"message": "unliked", "like_count": post.like_count()}, status=status.HTTP_200_OK)
         else:
             Like.objects.create(user=request.user, post=post)
-            return Response({"message": "liked"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "liked", "like_count": post.like_count()}, status=status.HTTP_201_CREATED)
+
