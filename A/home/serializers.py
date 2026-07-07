@@ -4,6 +4,7 @@ from rest_framework import serializers
 class PostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     user_likes = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -12,6 +13,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_like_count(self, obj):
         return obj.plikes.count()
+
+    def get_comment_count(self, obj):
+        return obj.pcomments.count()
 
     def get_user_likes(self, obj):
         request = self.context.get('request')
