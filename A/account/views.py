@@ -132,10 +132,12 @@ from .serializers import UserRegisterSerializer, ProfileSerializer, UserSerializ
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
+from rest_framework.throttling import  AnonRateThrottle
 
 
 class UserRegisterAPI(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [AnonRateThrottle]
 
     def post(self, request):
         ser_data = UserRegisterSerializer(data=request.data)

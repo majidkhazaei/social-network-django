@@ -145,6 +145,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # پیش‌فرض: خواندن برای همه، نوشتن برای لاگین‌شده‌ها
     ),
+    'DEFAULT_THROTTLE_RATES':{
+            'anon': '3/hour',
+            'user': '3/day'
+        },
 }
 
 SIMPLE_JWT = {

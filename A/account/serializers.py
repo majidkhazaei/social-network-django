@@ -3,13 +3,16 @@ from django.contrib.auth.models import User
 from .models import Relation, Profile
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    post_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'following_count', 'followers_count')
+        fields = ('username', 'email', 'following_count', 'followers_count','is_following', 'post_count')
 
 
     def get_following_count(self, obj):
@@ -19,6 +22,20 @@ class UserSerializer(serializers.ModelSerializer):
     def get_followers_count(self, obj):
         followers = obj.followers.count()
         return followers
+
+    def get_is_following(self, obj):
+        request = self.context.get("request")
+
+        if request and request.user.is_authenticated:
+            return Relation.objects.filter(
+                from_user=request.user,
+                to_user=obj
+            ).exists()
+        return False
+
+    def get_post_count(self, obj):
+        post = obj.posts.count()
+        return post
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
