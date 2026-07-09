@@ -150,8 +150,23 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.types import OpenApiTypes
 
 
+
+@extend_schema_view(
+    list=extend_schema(
+        summary="List Posts",
+        description="Get list of all posts with pagination, search and filtering.",
+        tags=["Posts"],
+    ),
+    create=extend_schema(
+        summary="Create Post",
+        description="Create a new post (Authenticated users only).",
+        tags=["Posts"],
+    )
+)
 class PostListCreateAPIView(ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -175,13 +190,42 @@ class PostListCreateAPIView(ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+@extend_schema_view(
+    retrieve=extend_schema(
+        summary="Get Post Detail",
+        description="Retrieve a single post by slug.",
+        tags=["Posts"],
+    ),
+    update=extend_schema(
+        summary="Update Post",
+        description="Update a post (only author can update).",
+        tags=["Posts"],
+    ),
+    destroy=extend_schema(
+        summary="Delete Post",
+        description="Delete a post (only author can delete).",
+        tags=["Posts"],
+    )
+)
+
 class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     lookup_field = 'slug'
 
-
+@extend_schema_view(
+    list=extend_schema(
+        summary="List Comments",
+        description="Get all top-level comments of a post.",
+        tags=["Comments"],
+    ),
+    create=extend_schema(
+        summary="Create Comment / Reply",
+        description="Create a new comment or reply to another comment.",
+        tags=["Comments"],
+    )
+)
 class CommentListCreateAPIView(ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -208,7 +252,16 @@ class CommentListCreateAPIView(ListCreateAPIView):
             is_reply=bool(reply_obj)
         )
 
-
+@extend_schema(
+    summary="Toggle Like on Post",
+    description="Like or unlike a post. Returns current like count.",
+    tags=["Likes"],
+    request=None,
+    responses={
+        200: OpenApiTypes.OBJECT,  # unliked
+        201: OpenApiTypes.OBJECT,  # liked
+    }
+)
 class LikeToggleAPIView(APIView):
     permission_classes = [IsAuthenticated]
 

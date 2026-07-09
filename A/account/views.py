@@ -130,11 +130,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, ProfileSerializer, UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.throttling import  AnonRateThrottle
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.types import OpenApiTypes
+from rest_framework import status
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
-
+@extend_schema(
+    summary="Register User",
+    description="Create a new user account using username, email, and password.",
+    tags=["Auth"],
+    request=UserRegisterSerializer,
+    responses={201: UserRegisterSerializer},
+)
 class UserRegisterAPI(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle]
@@ -146,7 +156,13 @@ class UserRegisterAPI(APIView):
             return Response(ser_data.data, status=status.HTTP_201_CREATED)
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@extend_schema(
+    summary="Follow / Unfollow User",
+    description="Toggle follow status of a user.",
+    tags=["Users"],
+    request=None,
+    responses={200: {"type": "object", "properties": {"message": {"type": "string"}}}},
+)
 class FollowToggleAPI(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -163,7 +179,22 @@ class FollowToggleAPI(APIView):
             Relation.objects.create(from_user=request.user, to_user=user)
             return Response({"message": "followed"}, status=status.HTTP_200_OK)
 
-
+@extend_schema_view(
+    get=extend_schema(
+        summary="Get Current User Profile",
+        description="Retrieve profile of the authenticated user.",
+        tags=["Profile"],
+    ),
+    put=extend_schema(
+        summary="Update Profile",
+        description="Update profile information.",
+        tags=["Profile"],
+    ),
+    patch=extend_schema(
+        summary="Partial Update Profile",
+        tags=["Profile"],
+    )
+)
 class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
@@ -172,7 +203,16 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     def get_object(self):
         return Profile.objects.get(user=self.request.user)
 
+
+@extend_schema(
+    summary="List All Users",
+    description="Retrieve list of all users (for authenticated users).",
+    tags=["Users"],
+)
 class UserListAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    ordering_fields = ['date_joined']
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    search_fields = ['username',]
