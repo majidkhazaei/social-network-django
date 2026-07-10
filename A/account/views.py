@@ -1,3 +1,6 @@
+from multiprocessing.spawn import is_forking
+
+from django.contrib.gis.gdal.prototypes.srs import from_user_input
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UserRegisterForm, UserLoginForm, EditUserForm
@@ -216,3 +219,14 @@ class UserListAPIView(ListAPIView):
     ordering_fields = ['date_joined']
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     search_fields = ['username',]
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+
+        is_following = self.request.query_params.get('is_following')
+        if is_following and self.request.user.is_authenticated:
+            following_ids = Relation.objects.filter(from_user=self.request.user).values_list('to_user_id', flat=True)
+            queryset = queryset.filter(id__in=following_ids)
+
+        return queryset
+
